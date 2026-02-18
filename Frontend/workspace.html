@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>checkList - Task Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Custom checkbox */
+        .custom-checkbox {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #cbd5e1;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .custom-checkbox:checked {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+
+        .custom-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .completed-task {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-60 bg-white border-r border-gray-200 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-200">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold text-gray-900">checkList</span>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 space-y-1">
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                    <i class="fas fa-inbox w-5"></i>
+                    <span class="flex-1">Inbox</span>
+                    <span class="text-sm text-gray-400" id="inbox-count">12</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-blue-50 text-blue-600 transition">
+                    <i class="fas fa-calendar-day w-5"></i>
+                    <span class="flex-1">Today</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                    <i class="fas fa-calendar-week w-5"></i>
+                    <span class="flex-1">Upcoming</span>
+                </a>
+
+                <!-- Categories -->
+                <div class="pt-6">
+                    <h3 class="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Categories</h3>
+                    <div class="space-y-1" id="categories-list">
+                        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-gray-100 text-gray-900 transition">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span class="flex-1">Work</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                            <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                            <span class="flex-1">Personal</span>
+                        </a>
+                        <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                            <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                            <span class="flex-1">Ideas</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Settings -->
+            <div class="p-4 border-t border-gray-200">
+                <button class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 w-full transition">
+                    <i class="fas fa-cog w-5"></i>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex overflow-hidden">
+            <!-- Tasks List -->
+            <div class="flex-1 overflow-y-auto">
+                <div class="max-w-4xl mx-auto p-8">
+                    <!-- Breadcrumb -->
+                    <div class="text-sm text-gray-500 mb-4">
+                        <span>Workspace</span>
+                        <span class="mx-2">/</span>
+                        <span>Categories</span>
+                        <span class="mx-2">/</span>
+                        <span class="text-gray-900">Work</span>
+                    </div>
+
+                    <!-- Page Title -->
+                    <h1 class="text-4xl font-bold text-gray-900 mb-8">Work</h1>
+
+                    <!-- Add Task Button -->
+                    <button class="flex items-center space-x-3 text-blue-500 hover:text-blue-600 mb-6 transition" onclick="showAddTask()">
+                        <i class="fas fa-plus"></i>
+                        <span class="text-gray-400">Add a new task...</span>
+                    </button>
+
+                    <!-- Tasks Container -->
+                    <div class="space-y-3" id="tasks-container">
+                        <!-- Task items will be dynamically added here -->
+                    </div>
+
+                    <!-- Completed Section -->
+                    <div class="mt-8">
+                        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">Completed</h2>
+                        <div class="space-y-3" id="completed-tasks">
+                            <!-- Completed tasks will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Details Panel -->
+            <aside class="w-96 bg-white border-l border-gray-200 overflow-y-auto" id="task-details-panel">
+                <div class="p-6">
+                    <!-- Header -->
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Task Details</h2>
+                        <div class="flex items-center space-x-2">
+                            <button class="text-gray-400 hover:text-gray-600">
+                                <i class="far fa-star"></i>
+                            </button>
+                            <button class="text-gray-400 hover:text-gray-600" onclick="closeTaskDetails()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Task Title -->
+                    <h3 class="text-2xl font-bold text-gray-900 mb-6" id="detail-task-title">
+                        Select a task to view details
+                    </h3>
+
+                    <!-- Task Meta Information -->
+                    <div class="space-y-4 mb-6" id="task-meta">
+                        <!-- Priority -->
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-flag w-5 text-gray-400"></i>
+                            <span class="text-sm text-gray-600">Priority</span>
+                            <span class="text-sm font-medium text-red-600" id="detail-priority">High Priority</span>
+                        </div>
+
+                        <!-- Due Date -->
+                        <div class="flex items-center space-x-3">
+                            <i class="far fa-calendar w-5 text-gray-400"></i>
+                            <span class="text-sm text-gray-600">Due Date</span>
+                            <span class="text-sm text-gray-900" id="detail-due-date">Oct 12, 2023</span>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="flex items-center space-x-3">
+                            <i class="fas fa-tag w-5 text-gray-400"></i>
+                            <span class="text-sm text-gray-600">Category</span>
+                            <span class="text-sm text-blue-600" id="detail-category">Work</span>
+                        </div>
+                    </div>
+
+                    <!-- Notes Section -->
+                    <div class="mb-6">
+                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Notes</h4>
+                        <div class="text-sm text-gray-700 leading-relaxed" id="detail-notes">
+                            <p>Select a task to view notes</p>
+                        </div>
+                        <button class="text-sm text-gray-400 mt-2 hover:text-gray-600">Add more notes...</button>
+                    </div>
+
+                    <!-- Sub-tasks Section -->
+                    <div class="mb-6">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Sub-tasks</h4>
+                            <span class="text-xs text-blue-500 font-medium" id="subtask-progress">40% Complete</span>
+                        </div>
+                        <div class="space-y-2" id="subtasks-list">
+                            <!-- Subtasks will be dynamically added here -->
+                        </div>
+                        <button class="flex items-center space-x-2 text-sm text-blue-500 hover:text-blue-600 mt-3">
+                            <i class="fas fa-plus"></i>
+                            <span>Add sub-task</span>
+                        </button>
+                    </div>
+
+                    <!-- Activity Section -->
+                    <div class="mb-6">
+                        <h4 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Activity</h4>
+                        <div class="space-y-4" id="activity-list">
+                            <!-- Activity items will be dynamically added here -->
+                        </div>
+                    </div>
+
+                    <!-- Mark as Done Button -->
+                    <button class="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 rounded-lg transition" onclick="markTaskDone()">
+                        Mark as Done
+                    </button>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script>
+        // Sample data structure - Replace with your actual data
+        const tasksData = [
+            {
+                id: 1,
+                title: "Q4 Quarterly Report Finalization",
+                priority: "high",
+                dueDate: "Today",
+                category: "Work",
+                subtasksCount: 5,
+                subtasksCompleted: 2,
+                completed: false,
+                notes: "Need to review the finance figures from the marketing department. Ensure the ROI charts are updated to the latest SVG formats for high-res printing.",
+                subtasks: [
+                    { id: 1, title: "Export sales data from CRM", completed: true },
+                    { id: 2, title: "Email Sarah for the logo files", completed: true },
+                    { id: 3, title: "Format Appendix tables", completed: false }
+                ],
+                activity: [
+                    { action: "Created by", user: "Alex Rivera", time: "on Oct 10" },
+                    { action: "Updated priority to", priority: "High", time: "Yesterday" },
+                    { action: "Checked off 2 sub-tasks", time: "2 hours ago" }
+                ]
+            },
+            {
+                id: 2,
+                title: "Prepare slide deck for client meeting",
+                priority: "medium",
+                dueDate: "Oct 14",
+                category: "Work",
+                subtasksCount: 0,
+                subtasksCompleted: 0,
+                completed: false,
+                notes: "",
+                subtasks: [],
+                activity: []
+            },
+            {
+                id: 3,
+                title: "Research competitor pricing models",
+                priority: "low",
+                dueDate: "Oct 15",
+                category: "Work",
+                subtasksCount: 0,
+                subtasksCompleted: 0,
+                completed: false,
+                notes: "",
+                subtasks: [],
+                activity: []
+            }
+        ];
+
+        const completedTasks = [
+            {
+                id: 4,
+                title: "Draft onboarding documents",
+                completed: true
+            }
+        ];
+
+        let currentTask = null;
+
+        // Render tasks
+        function renderTasks() {
+            const tasksContainer = document.getElementById('tasks-container');
+            tasksContainer.innerHTML = '';
+
+            tasksData.forEach(task => {
+                const taskElement = createTaskElement(task);
+                tasksContainer.appendChild(taskElement);
+            });
+        }
+
+        // Create task element
+        function createTaskElement(task) {
+            const div = document.createElement('div');
+            div.className = 'bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition cursor-pointer';
+            div.onclick = () => showTaskDetails(task);
+
+            const priorityColors = {
+                high: 'bg-red-100 text-red-700',
+                medium: 'bg-blue-100 text-blue-700',
+                low: 'bg-gray-100 text-gray-700'
+            };
+
+            const subtasksText = task.subtasksCount > 0 
+                ? `<span class="flex items-center space-x-1 text-xs text-gray-500">
+                    <i class="fas fa-list"></i>
+                    <span>${task.subtasksCompleted}/${task.subtasksCount} Subtasks</span>
+                   </span>`
+                : '';
+
+            div.innerHTML = `
+                <div class="flex items-start space-x-3">
+                    <input type="checkbox" class="custom-checkbox mt-1" onclick="event.stopPropagation(); toggleTask(${task.id})">
+                    <div class="flex-1">
+                        <h3 class="font-medium text-gray-900 mb-2">${task.title}</h3>
+                        <div class="flex items-center space-x-3">
+                            <span class="px-2 py-1 text-xs font-medium rounded ${priorityColors[task.priority]} uppercase">${task.priority}</span>
+                            <span class="flex items-center space-x-1 text-xs text-gray-500">
+                                <i class="far fa-calendar"></i>
+                                <span>${task.dueDate}</span>
+                            </span>
+                            ${subtasksText}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            return div;
+        }
+
+        // Render completed tasks
+        function renderCompletedTasks() {
+            const completedContainer = document.getElementById('completed-tasks');
+            completedContainer.innerHTML = '';
+
+            completedTasks.forEach(task => {
+                const div = document.createElement('div');
+                div.className = 'bg-white rounded-lg border border-gray-200 p-4';
+
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <input type="checkbox" class="custom-checkbox" checked disabled>
+                        <span class="text-gray-500 completed-task">${task.title}</span>
+                    </div>
+                `;
+
+                completedContainer.appendChild(div);
+            });
+        }
+
+        // Show task details
+        function showTaskDetails(task) {
+            currentTask = task;
+            document.getElementById('detail-task-title').textContent = task.title;
+            
+            const priorityColors = {
+                high: 'text-red-600',
+                medium: 'text-blue-600',
+                low: 'text-gray-600'
+            };
+            
+            const priorityElement = document.getElementById('detail-priority');
+            priorityElement.textContent = task.priority.charAt(0).toUpperCase() + task.priority.slice(1) + ' Priority';
+            priorityElement.className = `text-sm font-medium ${priorityColors[task.priority]}`;
+            
+            document.getElementById('detail-due-date').textContent = task.dueDate;
+            document.getElementById('detail-category').textContent = task.category;
+            
+            const notesElement = document.getElementById('detail-notes');
+            notesElement.innerHTML = task.notes 
+                ? `<p>${task.notes}</p>` 
+                : '<p class="text-gray-400">No notes added yet</p>';
+
+            // Render subtasks
+            const subtasksList = document.getElementById('subtasks-list');
+            subtasksList.innerHTML = '';
+            task.subtasks.forEach(subtask => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center space-x-2';
+                div.innerHTML = `
+                    <input type="checkbox" class="custom-checkbox" ${subtask.completed ? 'checked' : ''}>
+                    <span class="text-sm ${subtask.completed ? 'completed-task text-gray-500' : 'text-gray-900'}">${subtask.title}</span>
+                `;
+                subtasksList.appendChild(div);
+            });
+
+            // Update progress
+            const progress = task.subtasksCount > 0 
+                ? Math.round((task.subtasksCompleted / task.subtasksCount) * 100)
+                : 0;
+            document.getElementById('subtask-progress').textContent = `${progress}% Complete`;
+
+            // Render activity
+            const activityList = document.getElementById('activity-list');
+            activityList.innerHTML = '';
+            task.activity.forEach(activity => {
+                const div = document.createElement('div');
+                div.className = 'flex items-start space-x-3';
+                
+                let activityText = '';
+                if (activity.user) {
+                    activityText = `${activity.action} <strong>${activity.user}</strong> ${activity.time}`;
+                } else if (activity.priority) {
+                    activityText = `${activity.action} <strong class="text-red-600">${activity.priority}</strong> ${activity.time}`;
+                } else {
+                    activityText = `${activity.action} ${activity.time}`;
+                }
+                
+                div.innerHTML = `
+                    <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                    <p class="text-sm text-gray-600">${activityText}</p>
+                `;
+                activityList.appendChild(div);
+            });
+        }
+
+        // Close task details
+        function closeTaskDetails() {
+            // Could add animation or hide panel on mobile
+            console.log('Close task details');
+        }
+
+        // Toggle task completion
+        function toggleTask(taskId) {
+            const taskIndex = tasksData.findIndex(t => t.id === taskId);
+            if (taskIndex !== -1) {
+                const task = tasksData[taskIndex];
+                completedTasks.push({ id: task.id, title: task.title, completed: true });
+                tasksData.splice(taskIndex, 1);
+                renderTasks();
+                renderCompletedTasks();
+            }
+        }
+
+        // Mark current task as done
+        function markTaskDone() {
+            if (currentTask) {
+                toggleTask(currentTask.id);
+                currentTask = null;
+            }
+        }
+
+        // Show add task (placeholder)
+        function showAddTask() {
+            alert('Add task functionality - implement as needed');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTasks();
+            renderCompletedTasks();
+            // Auto-select first task
+            if (tasksData.length > 0) {
+                showTaskDetails(tasksData[0]);
+            }
+        });
+    </script>
+</body>
+</html>

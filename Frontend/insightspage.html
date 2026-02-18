@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights - checkList</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .stat-card {
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .tasks-completed-card {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+        }
+
+        .weekly-bar {
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.2s;
+        }
+
+        .weekly-bar:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .power-user-card {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+
+        .achievement-btn {
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.2s;
+        }
+
+        .achievement-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-60 bg-white border-r border-gray-200 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 border-b border-gray-200">
+                <a href="checklist-app.html" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check text-white text-sm"></i>
+                    </div>
+                    <span class="text-xl font-bold text-gray-900">checkList</span>
+                </a>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 space-y-1">
+                <a href="checklist-app.html" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                    <i class="fas fa-list w-5"></i>
+                    <span class="flex-1">My Tasks</span>
+                </a>
+                <a href="insights.html" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-gray-100 text-gray-900 transition">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span class="flex-1">Insights</span>
+                </a>
+                <a href="#" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition">
+                    <i class="fas fa-cog w-5"></i>
+                    <span class="flex-1">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+            <div class="max-w-7xl mx-auto p-8">
+                <!-- Page Header -->
+                <div class="mb-8">
+                    <h1 class="text-5xl font-bold text-gray-900 mb-2" style="font-family: 'Times New Roman', serif;">Insights</h1>
+                    <p class="text-gray-600">Your productivity overview for this period.</p>
+                </div>
+
+                <!-- Time Period Selector -->
+                <div class="flex justify-end mb-6">
+                    <div class="inline-flex bg-white rounded-lg border border-gray-200 p-1">
+                        <button class="px-4 py-2 rounded-md bg-gray-100 text-gray-900 font-medium text-sm transition" onclick="changePeriod('week')">Week</button>
+                        <button class="px-4 py-2 rounded-md text-gray-600 hover:bg-gray-50 font-medium text-sm transition" onclick="changePeriod('month')">Month</button>
+                        <button class="px-4 py-2 rounded-md text-gray-600 hover:bg-gray-50 font-medium text-sm transition" onclick="changePeriod('year')">Year</button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards Row -->
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <!-- Completed Card -->
+                    <div class="stat-card bg-white rounded-2xl p-6 border border-gray-200">
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="text-gray-600 font-medium">Completed</span>
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check text-green-600 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-end space-x-2">
+                            <h2 class="text-5xl font-bold text-gray-900">48</h2>
+                            <span class="text-green-600 font-medium mb-2 flex items-center">
+                                <i class="fas fa-arrow-up text-xs mr-1"></i>
+                                12%
+                            </span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">from last week</p>
+                    </div>
+
+                    <!-- Pending Card -->
+                    <div class="stat-card bg-white rounded-2xl p-6 border border-gray-200">
+                        <div class="flex items-start justify-between mb-4">
+                            <span class="text-gray-600 font-medium">Pending</span>
+                            <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-clock text-orange-600 text-sm"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-end space-x-2">
+                            <h2 class="text-5xl font-bold text-gray-900">12</h2>
+                            <span class="text-orange-600 font-medium mb-2">3 due today</span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">Critical attention needed</p>
+                    </div>
+                </div>
+
+                <!-- Tasks Completed Card -->
+                <div class="tasks-completed-card rounded-2xl p-8 mb-6 text-white">
+                    <div class="flex items-start justify-between mb-6">
+                        <div>
+                            <p class="text-white/80 mb-2">Tasks Completed</p>
+                            <div class="flex items-end space-x-3">
+                                <h2 class="text-6xl font-bold">81</h2>
+                                <span class="text-3xl font-light mb-2">29%</span>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 bg-white/20 rounded-full text-sm font-medium">WEEK</span>
+                    </div>
+
+                    <!-- Weekly Bar Chart -->
+                    <div class="flex items-end justify-between space-x-2 h-24">
+                        <div class="weekly-bar flex-1 rounded-t-lg" style="height: 40%;" data-value="5"></div>
+                        <div class="weekly-bar flex-1 rounded-t-lg" style="height: 60%;"></div>
+                        <div class="weekly-bar flex-1 rounded-t-lg" style="height: 50%;"></div>
+                        <div class="weekly-bar flex-1 rounded-t-lg" style="height: 70%;"></div>
+                        <div class="weekly-bar flex-1 rounded-t-lg" style="height: 55%;"></div>
+                        <div class="weekly-bar flex-1 rounded-t-lg" style="height: 45%;"></div>
+                        <div class="weekly-bar flex-1 rounded-t-lg" style="height: 35%;"></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-6">
+                    <!-- Completion Rate Chart -->
+                    <div class="col-span-2 bg-white rounded-2xl p-6 border border-gray-200">
+                        <h3 class="text-lg font-bold text-gray-900 mb-6">Completion Rate</h3>
+                        <canvas id="completionRateChart" height="80"></canvas>
+                    </div>
+
+                    <!-- Power User Card -->
+                    <div class="power-user-card rounded-2xl p-6 text-white relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-bolt text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold mb-2">Power User</h3>
+                            <p class="text-white/70 text-sm mb-6">You are in the top 5% of productive users this week. Keep it up!</p>
+                            <button class="achievement-btn w-full py-3 rounded-lg font-medium text-sm">
+                                Share Achievements
+                            </button>
+                        </div>
+                        <!-- Decorative circle -->
+                        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-white/5 rounded-full"></div>
+                    </div>
+                </div>
+
+                <!-- Task Distribution -->
+                <div class="mt-6 bg-white rounded-2xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-bold text-gray-900 mb-6">Task Distribution</h3>
+                    <div class="grid grid-cols-2 gap-8">
+                        <!-- Donut Chart -->
+                        <div class="flex items-center justify-center">
+                            <div class="relative">
+                                <canvas id="taskDistributionChart" width="200" height="200"></canvas>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="text-3xl font-bold text-gray-900">20%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Legend -->
+                        <div class="flex flex-col justify-center space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-4 h-4 bg-teal-500 rounded-full"></div>
+                                    <span class="text-gray-700">Work Projects</span>
+                                </div>
+                                <span class="font-semibold text-gray-900">65%</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-4 h-4 bg-purple-500 rounded-full"></div>
+                                    <span class="text-gray-700">Personal</span>
+                                </div>
+                                <span class="font-semibold text-gray-900">20%</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-4 h-4 bg-gray-300 rounded-full"></div>
+                                    <span class="text-gray-700">Other</span>
+                                </div>
+                                <span class="font-semibold text-gray-900">15%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Dark Mode Toggle -->
+        <button class="fixed bottom-8 right-8 w-12 h-12 bg-white border border-gray-200 rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition">
+            <i class="fas fa-moon text-gray-600"></i>
+        </button>
+    </div>
+
+    <script>
+        // Completion Rate Line Chart
+        const completionRateCtx = document.getElementById('completionRateChart').getContext('2d');
+        const completionRateChart = new Chart(completionRateCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Completion Rate',
+                    data: [35, 52, 48, 60, 72, 62, 78],
+                    borderColor: '#1f2937',
+                    backgroundColor: 'rgba(31, 41, 55, 0.05)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#1f2937',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            },
+                            stepSize: 20
+                        },
+                        grid: {
+                            color: '#f3f4f6'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Task Distribution Donut Chart
+        const taskDistCtx = document.getElementById('taskDistributionChart').getContext('2d');
+        const taskDistributionChart = new Chart(taskDistCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Work Projects', 'Personal', 'Other'],
+                datasets: [{
+                    data: [65, 20, 15],
+                    backgroundColor: ['#14b8a6', '#a855f7', '#e5e7eb'],
+                    borderWidth: 0,
+                    cutout: '75%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Period change function
+        function changePeriod(period) {
+            // Remove active state from all buttons
+            document.querySelectorAll('.inline-flex button').forEach(btn => {
+                btn.classList.remove('bg-gray-100', 'text-gray-900');
+                btn.classList.add('text-gray-600', 'hover:bg-gray-50');
+            });
+
+            // Add active state to clicked button
+            event.target.classList.remove('text-gray-600', 'hover:bg-gray-50');
+            event.target.classList.add('bg-gray-100', 'text-gray-900');
+
+            // Here you would typically update the charts with new data
+            console.log('Changed to:', period);
+        }
+    </script>
+</body>
+</html>

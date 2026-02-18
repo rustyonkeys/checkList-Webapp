@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checklist Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="bg-gray-100 text-gray-800">
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white border-r p-6 flex flex-col">
+        <div class="flex items-center gap-2 mb-8">
+          <div class="w-8 h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold">C</div>
+          <h1 class="font-semibold text-lg">checkList</h1>
+        </div>
+
+        <nav class="space-y-2">
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg bg-orange-50 text-orange-500 font-medium">
+            📅 Today
+          </div>
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+            🗓 Upcoming
+          </div>
+          <div class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">
+            📊 Analytics
+          </div>
+        </nav>
+
+        <div class="mt-8">
+          <p class="text-xs text-gray-400 mb-3">PROJECTS</p>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-blue-500 rounded-full"></span>
+              Work
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+              Personal
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-auto space-y-2">
+          <div class="px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">🌙 Switch Theme</div>
+          <div class="px-3 py-2 rounded-lg hover:bg-gray-100 cursor-pointer">⚙ Settings</div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 p-10 overflow-y-auto">
+        <!-- Header -->
+        <div class="flex items-center mb-8">
+          <h2 class="text-3xl font-bold">Today</h2>
+          <span class="ml-3 text-gray-500">Feb 11, 2024</span>
+
+          <div class="ml-auto flex items-center gap-4">
+            <div class="bg-white rounded-full px-4 py-2 flex items-center gap-2 shadow-sm">
+              🔍
+              <span class="text-gray-400 text-sm">Search tasks...</span>
+            </div>
+            <button class="w-10 h-10 rounded-full bg-orange-500 text-white text-xl flex items-center justify-center shadow">
+              +
+            </button>
+          </div>
+        </div>
+
+        <!-- High Priority -->
+        <section class="mb-10">
+          <h3 class="text-xs font-bold text-gray-400 mb-3">HIGH PRIORITY</h3>
+
+          <div class="space-y-3">
+            <div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+              <div class="w-5 h-5 border rounded"></div>
+              <p class="flex-1">Finalize project proposal for client</p>
+              <span class="text-xs bg-gray-100 px-2 py-1 rounded">WORK</span>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+              <div class="w-5 h-5 border rounded"></div>
+              <p class="flex-1">Review budget spreadsheet</p>
+              <span class="text-xs bg-gray-100 px-2 py-1 rounded">FINANCE</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Other Tasks -->
+        <section>
+          <h3 class="text-xs font-bold text-gray-400 mb-3">OTHER TASKS</h3>
+
+          <div class="space-y-3">
+            <div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+              <div class="w-5 h-5 border rounded"></div>
+              <p class="flex-1">Plan weekend trip itinerary</p>
+              <span class="text-xs bg-gray-100 px-2 py-1 rounded">PERSONAL</span>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+              <div class="w-5 h-5 border rounded"></div>
+              <p class="flex-1">Buy groceries</p>
+              <span class="text-xs bg-gray-100 px-2 py-1 rounded">HOME</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Right Panel -->
+      <aside class="w-80 bg-white border-l p-6">
+        <h3 class="font-semibold mb-4">Task Details</h3>
+        <p class="text-sm text-gray-500">Select a task to view full details.</p>
+      </aside>
+    </div>
+  </body>
+</html>
